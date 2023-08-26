@@ -137,6 +137,11 @@ RUN chown -R postgres:postgres /var/lib/postgresql \
 && echo "host all all 0.0.0.0/0 scram-sha-256" >> /etc/postgresql/$PG_VERSION/main/pg_hba.conf \
 && echo "host all all ::/0 scram-sha-256" >> /etc/postgresql/$PG_VERSION/main/pg_hba.conf
 
+# Create the PostgreSQL role
+RUN service postgresql start \
+&& sudo -u postgres psql -c "CREATE USER renderer LOGIN PASSWORD 'renderer';" \
+&& service postgresql stop
+
 # Create volume directories
 RUN mkdir -p /run/renderd/ \
   &&  mkdir  -p  /data/database/  \
